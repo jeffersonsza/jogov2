@@ -3,29 +3,25 @@
         "6": {
             title: "6º ANO - MESOPOTÂMIA",
             pairs: [
-    { id: 1, itemA: "https://content.nationalgeographic.pt/medio/import/attachment/edicoesespeciais/HISTORIA/GrandesInvencoes/Escrita/c1.jpg", itemB: "Escrita dos sumérios", typeA: "image", typeB: "text", theme: 1 },
-    { id: 2, itemA: "Código de Hamurabi", itemB: "Lei 'olho por olho'", typeA: "text", typeB: "text", theme: 3 },
-    { id: 3, itemA: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tigr-euph-sv.png/250px-Tigr-euph-sv.png", itemB: "Terra entre rios", typeA: "image", typeB: "text", theme: 1 },
-    { id: 4, itemA: "Fenícios", itemB: "Grandes navegadores", typeA: "text", typeB: "text", theme: 0 },
-    { id: 5, itemA: "https://w7.pngwing.com/pngs/449/798/png-transparent-phoenician-alphabet-latin-alphabet-phoenician-alphabet-angle-white-english-thumbnail.png", itemB: "Primeiro alfabeto", typeA: "image", typeB: "text", theme: 0 },
-    { id: 6, itemA: "Hebreus", itemB: "Povo do Êxodo", typeA: "text", typeB: "text", theme: 0 },
-    { id: 7, itemA: "10 Mandamentos", itemB: "Leis hebraicas", typeA: "text", typeB: "text", theme: 0 },
-    { id: 8, itemA: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Darius_seal._Darius_stands_in_a_royal_chariot_below_Ahura_Mazda_and_shoots_arrows_at_a_rampant_lion._From_Thebes%2C_Egypt._6th-5th_century_BCE._British_Museum_%28cropped%29.jpg/1920px-thumbnail.jpg", itemB: "Selo real persa", typeA: "image", typeB: "text", theme: 0 },
-    { id: 9, itemA: "Zigurate", itemB: "Templo em degraus", typeA: "text", typeB: "text", theme: 1 },
-    { id: 10, itemA: "Assírios", itemB: "Guerreiros cruéis", typeA: "text", typeB: "text", theme: 4 },
-    { id: 11, itemA: "Persia", itemB: "Império dividido em satrápias", typeA: "text", typeB: "text", theme: 0 },
+    { id: 1, itemA: "https://content.nationalgeographic.pt/medio/import/attachment/edicoesespeciais/HISTORIA/GrandesInvencoes/Escrita/c1.jpg", itemB: "Escrita dos sumérios", typeA: "image", typeB: "text", theme: 2 },
+    { id: 2, itemA: "Código de Hamurabi", itemB: "Lei 'olho por olho'", typeA: "text", typeB: "text", theme: 2 },
+    { id: 3, itemA: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tigr-euph-sv.png/250px-Tigr-euph-sv.png", itemB: "Terra entre rios", typeA: "image", typeB: "text", theme: 2 },
+    { id: 4, itemA: "Fenícios", itemB: "Grandes navegadores", typeA: "text", typeB: "text", theme: 1 },
+    { id: 5, itemA: "https://w7.pngwing.com/pngs/449/798/png-transparent-phoenician-alphabet-latin-alphabet-phoenician-alphabet-angle-white-english-thumbnail.png", itemB: "Primeiro alfabeto", typeA: "image", typeB: "text", theme: 1 },
+    { id: 6, itemA: "Hebreus", itemB: "Povo do Êxodo", typeA: "text", typeB: "text", theme: 1 },
+    { id: 7, itemA: "10 Mandamentos", itemB: "Leis hebraicas", typeA: "text", typeB: "text", theme: 1 },
+    { id: 8, itemA: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/The_Darius_seal._Darius_stands_in_a_royal_chariot_below_Ahura_Mazda_and_shoots_arrows_at_a_rampant_lion._From_Thebes%2C_Egypt._6th-5th_century_BCE._British_Museum_%28cropped%29.jpg/1920px-thumbnail.jpg", itemB: "Selo real persa", typeA: "image", typeB: "text", theme: 1 },
+    { id: 9, itemA: "Zigurate", itemB: "Templo em degraus", typeA: "text", typeB: "text", theme: 2 },
+    { id: 10, itemA: "Assírios", itemB: "Guerreiros cruéis", typeA: "text", typeB: "text", theme: 2 },
+    { id: 11, itemA: "Persia", itemB: "Império dividido em satrápias", typeA: "text", typeB: "text", theme: 1 },
     { id: 12, itemA: "Povo que formou o 1º império da Mesopotâmia", itemB: "Acádios", typeA: "text", typeB: "text", theme: 2 },
-    { id: 13, itemA: "Medos e Caldeus", itemB: " Conquistam o Império Assírio", typeA: "text", typeB: "text", theme: 5 },
-    { id: 14, itemA: "Religião monoteísta", itemB: "Judaísmo", typeA: "text", typeB: "text", theme: 0 },
-    { id: 15, itemA: "Púrpura", itemB: "Símbolo de poder", typeA: "text", typeB: "text", theme: 0 }
+    { id: 13, itemA: "Medos e Caldeus", itemB: " Conquistam o Império Assírio", typeA: "text", typeB: "text", theme: 2 },
+    { id: 14, itemA: "Religião monoteísta", itemB: "Judaísmo", typeA: "text", typeB: "text", theme: 1 },
+    { id: 15, itemA: "Púrpura", itemB: "Símbolo de poder", typeA: "text", typeB: "text", theme: 2 }
 ],
             themes: {
-                0: "Outros assuntos",
-                1: "Sumerianos",
-                2: "Acádios", 
-                3: "1º Império Babilônico",
-                4: "Assírios",
-                5: "2º Império Babilônico"
+                1: "Mesopotâmia",
+                2: "Hebreus, fenícios e persas"
             }
         },
         "7": {
