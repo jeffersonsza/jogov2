@@ -1,384 +1,1009 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jogo de Associação - História</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Equações de 1º Grau</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .jogo-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1, h2 {
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructions {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .instructions p {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-warning {
+            background-color: #ff9800;
+        }
+
+        .btn-warning:hover {
+            background-color: #e68900;
+        }
+
+        .btn-success {
+            background-color: #2196F3;
+        }
+
+        .btn-success:hover {
+            background-color: #0b7dda;
+        }
+
+        .voltar {
+            background-color: #9c27b0;
+            margin-top: 20px;
+        }
+
+        .voltar:hover {
+            background-color: #7b1fa2;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            min-width: 100px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .timer {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .timer-progress {
+            height: 100%;
+            width: 100%;
+            background-color: #20c997;
+            border-radius: 10px;
+            transition: width 0.1s linear, background-color 0.3s;
+        }
+
+        .game-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .fixed-card, .current-card {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(145deg, #2196F3, #0d47a1);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .current-card {
+            background: linear-gradient(145deg, #FF9800, #e65100);
+        }
+
+        .operation {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .deck-container {
+            margin-left: 30px;
+        }
+
+        .deck {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(145deg, #4CAF50, #1b5e20);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .deck:hover {
+            transform: translateY(-5px);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .option {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .option:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .lose {
+            color: #ff5252;
+        }
+
+        .equation-display {
+            font-size: 24px;
+            margin: 20px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        @media (max-width: 600px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .deck-container {
+                margin-left: 0;
+                margin-top: 20px;
+            }
+            
+            .options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .result-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- Tela de Seleção de Ano -->
-<div id="year-selection">
-    <h1>JOGO DE ASSOCIAÇÃO HISTÓRICA</h1>
-    <p>ESCOLHA O ANO PARA JOGAR:</p>
-    <button class="year-btn" data-year="6">6º ANO</button>
-    <button class="year-btn" data-year="7">7º ANO</button>
-    <button class="year-btn" data-year="8">8º ANO</button>
-    <button class="year-btn" data-year="9">9º ANO</button>
-</div>
-
-<!-- Tela de Instruções -->
-<div id="start-screen">
-    <h1>JOGO DE ASSOCIAÇÃO</h1>
-    <p>COMBINE AS CARTAS. VOCÊ TEM 3 VIDAS.</p>
-    <p>INSTRUÇÕES:</p>
-    <p>1º Clique na carta. Clique no espaço abaixo das cartas.</p>
-    <p>2º Faça o mesmo com a carta que se associa a primeira.</p>
-    <p>Aqui é só um treino. Se você conseguir me mostrar o game concluído durante a aula receberá 3 pontos na média como prêmio.</p>
-    
-    <h3>ESCOLHA A DIFICULDADE:</h3>
-    <button class="difficulty-btn" data-difficulty="easy">Modo Fácil</button>
-    <button class="difficulty-btn" data-difficulty="hard">Modo Difícil</button>
-    
-    <button id="start-button">Iniciar Jogo</button>
-</div>
-
-<!-- Tela do Jogo -->
-<div id="game-screen">
-    <h2 id="game-title">PREPARADO?</h2>
-    <div id="timer" style="font-size: 18px; margin: 10px;">Tempo: 00:00</div>
-    <div class="lives" id="lives-container">
-        <div class="life"></div>
-        <div class="life"></div>
-        <div class="life"></div>
-    </div>
-    <div class="drag-area" id="drag-container">
-        <!-- Itens para selecionar -->
-    </div>
-    
-    <div class="drop-area" id="drop-container">
-        <!-- Pares de dominó -->
-    </div>
-	<button id="back-button" style="background-color: #f44336; margin-top: 20px;">Voltar para Anos</button>
-</div>
-
-<!-- Tela de Resultado -->
-<div id="result-screen">
-    <h2 id="result-message"></h2>
-    <button id="restart-button">Jogar Novamente</button>
-    <button id="back-to-years">Voltar para Anos</button>
-</div>
-
-
-<script type="module">
-
- import gameData from "./dados.js?version=1"
-
-    // Dados do jogo por ano (você pode preencher isso depois)
-    // Elementos do DOM
-    const yearSelection = document.getElementById('year-selection');
-    const startScreen = document.getElementById('start-screen');
-    const gameScreen = document.getElementById('game-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const resultMessage = document.getElementById('result-message');
-    const gameTitle = document.getElementById('game-title');
-    const dragContainer = document.getElementById('drag-container');
-    const dropContainer = document.getElementById('drop-container');
-    const livesContainer = document.getElementById('lives-container');
-    const startButton = document.getElementById('start-button');
-    const restartButton = document.getElementById('restart-button');
-    const backToYearsButton = document.getElementById('back-to-years');
-    const yearButtons = document.querySelectorAll('.year-btn');
-    const backButton = document.getElementById('back-button');
-    const difficultyButtons = document.querySelectorAll('.difficulty-btn');
-  
-
-    // Variáveis do jogo
-    let selectedItem = null;
-    let dropSlots = [];
-    let lives = 3;
-    let correctPairs = 0;
-    let currentYear = "";
-    let currentPairs = [];
-    let startTime;
-    let timerInterval;
-    let elapsedTime = 0;
-    let currentDifficulty = "hard"; // Padrão: modo difícil
-
-
-    // Selecionar ano
-    yearButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            currentYear = button.dataset.year;
-            const yearData = gameData[currentYear];
+    <div class="jogo-container">
+        <button id="restart-btn" class="btn btn-warning hidden">🔄 Reiniciar</button>
+        
+        <div class="container">
+            <div class="screen" id="welcome-screen">
+                <h1>Bem-vindo ao Jogo de Equações de 1º Grau</h1>
+                <div class="instructions">
+                    <p>Resolva as equações antes que o tempo acabe e passe de nível</p>
+                    <p>Será apresentada uma equação de primeiro grau que você precisa resolver</p>
+                    <p>Abaixo, escolha a alternativa correta para o valor de x</p>
+                    <p>Pense rápido ou o tempo irá acabar!</p>
+                    <p>Dica: Use operações inversas para isolar a variável x</p>
+                </div>
+                <button class="btn" id="start-btn">Começar</button>
+            </div>
             
-            if (yearData) {
-                currentPairs = yearData.pairs;
-                gameTitle.textContent = yearData.title;
+            <div class="screen hidden" id="game-screen">
+                <div class="game-info">
+                    <div class="info-box">
+                        <div class="info-label">Acertos</div>
+                        <div class="info-value" id="score">0/20</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Tempo</div>
+                        <div class="info-value" id="time">30s</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Nível</div>
+                        <div class="info-value" id="level-display">1</div>
+                    </div>
+                </div>
                 
-                yearSelection.style.display = 'none';
-                startScreen.style.display = 'block';
-            }
-        });
-    });
+                <div class="timer">
+                    <div class="timer-progress" id="timer-progress"></div>
+                </div>
+                
+                <p class="info-label" id="level-description">Nível 1: Equações básicas</p>
+                
+                <div class="equation-display" id="equation-display">
+                    <!-- A equação será exibida aqui -->
+                </div>
+                
+                <div class="deck-container">
+                    <div class="deck" id="deck">
+                        <div>20</div>
+                    </div>
+                </div>
+                
+                <div class="options" id="options">
+                    <!-- As opções serão geradas pelo JavaScript -->
+                </div>
+            </div>
 
-    // Selecionar dificuldade
-    difficultyButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            currentDifficulty = button.dataset.difficulty;
+            <button class="voltar btn">Voltar para o menu</button>
+
+            <div class="screen hidden" id="result-screen">
+                <h2 class="result-title" id="result-message">Parabéns!</h2>
+                <p class="result-stats" id="result-stats">Você acertou 20 de 20 equações!</p>
+                <div class="result-buttons">
+                    <button class="btn" id="play-again">Jogar Novamente</button>
+                    <button class="btn btn-success" id="next-level">Próximo Nível</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+      // Variáveis globais
+        let baseTimeLimit = 40;
+        let correctAnswer = null;
+        let currentLevel = 1;
+        let currentEquation = null;
+        let gameActive = false;
+        let remainingEquations = 20;
+        let remainingTime = null;
+        let score = 0;
+        let timeLimit = 40;
+        let timerInterval = null;
+        let totalQuestions = 20;
+        let errorCount = 0; // Contador de erros consecutivos para penalidade escalonada
+
+        // Elementos do DOM
+        let elements = null;
+        let levelConfigs = null;
+
+        // Configurações de nível
+       function configurarNiveis() {
+            levelConfigs = {
+                1: { 
+                    totalCards: 20, 
+                    timeLimit: 40,
+                    description: "Equações básicas com adição e subtração" 
+                },
+                2: { 
+                    totalCards: 20, 
+                    timeLimit: 30,
+                    description: "Coeficiente inteiro multiplicando a variável" 
+                },
+                3: { 
+                    totalCards: 18, 
+                    timeLimit: 55,
+                    description: "Combinação de adição/subtração com coeficiente" 
+                },
+                4: { 
+                    totalCards: 18, 
+                    timeLimit: 65,
+                    description: "Variáveis em ambos os lados e coeficientes negativos" 
+                },
+                5: { 
+                    totalCards: 16, 
+                    timeLimit: 70,
+                    description: "Coeficientes fracionários e decimais" 
+                },
+                6: { 
+                    totalCards: 16, 
+                    timeLimit: 70,
+                    description: "Variáveis em ambos os lados com frações" 
+                },
+                7: { 
+                    totalCards: 14, 
+                    timeLimit: 80,
+                    description: "Uso de parênteses para agrupamento" 
+                },
+                8: { 
+                    totalCards: 12, 
+                    timeLimit: 100,
+                    description: "Combinação de frações, decimais e parênteses" 
+                },
+                9: { 
+                    totalCards: 10, 
+                    timeLimit: 120,
+                    description: "Problemas complexos com múltiplos elementos" 
+                },
+                10: { 
+                    totalCards: 10, 
+                    timeLimit: 120,
+                    description: "Desafio final - Todas as complexidades" 
+                }
+            };
+        }
+
+        // Função de inicialização
+        function init() {
+            configurarNiveis();
+            configurarElementosDOM();
+            configurarEventListeners();
+        }
+
+        function configurarElementosDOM() {
+            elements = {
+                welcomeScreen: document.getElementById('welcome-screen'),
+                gameScreen: document.getElementById('game-screen'),
+                resultScreen: document.getElementById('result-screen'),
+                scoreElement: document.getElementById('score'),
+                timeElement: document.getElementById('time'),
+                levelDisplay: document.getElementById('level-display'),
+                levelDescription: document.getElementById('level-description'),
+                timerProgress: document.getElementById('timer-progress'),
+                equationDisplay: document.getElementById('equation-display'),
+                deck: document.getElementById('deck'),
+                optionsContainer: document.getElementById('options'),
+                resultMessage: document.getElementById('result-message'),
+                resultStats: document.getElementById('result-stats'),
+                nextLevelBtn: document.getElementById('next-level'),
+                startBtn: document.getElementById('start-btn'),
+                playAgainBtn: document.getElementById('play-again'),
+                restartBtn: document.getElementById('restart-btn'),
+                voltarBtn: document.querySelector('.voltar')
+            };
+        }
+
+        function configurarEventListeners() {
+            if (elements.startBtn) elements.startBtn.addEventListener('click', startGame);
+            if (elements.playAgainBtn) elements.playAgainBtn.addEventListener('click', startGame);
+            if (elements.nextLevelBtn) elements.nextLevelBtn.addEventListener('click', nextLevel);
+            if (elements.restartBtn) elements.restartBtn.addEventListener('click', reiniciarJogo);
+            if (elements.voltarBtn) elements.voltarBtn.addEventListener('click', () => location.reload());
             
-            // Destacar o botão selecionado
-            difficultyButtons.forEach(btn => {
-                btn.style.opacity = btn === button ? "1" : "0.7";
+            // Event delegation para as opções
+            if (elements.optionsContainer) {
+                elements.optionsContainer.addEventListener('click', (e) => {
+                    if (gameActive && e.target.classList.contains('option')) {
+                        checkAnswer(parseFloat(e.target.textContent));
+                    }
+                });
+            }
+
+            if (elements.deck) {
+                elements.deck.addEventListener('click', () => {
+                    if (gameActive) {
+                        generateEquation();
+                    }
+                });
+            }
+
+            // Atalhos de teclado para debug
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey) {
+                    if (e.key >= '1' && e.key <= '9') {
+                        currentLevel = parseInt(e.key);
+                        startGame();
+                    } else if (e.key === '0') {
+                        currentLevel = 10;
+                        startGame();
+                    }
+                }
             });
-        });
-    });
-
-    // Iniciar o jogo
-    startButton.addEventListener('click', () => {
-        startScreen.style.display = 'none';
-        gameScreen.style.display = 'block';
-        resetGame();
-        setupGame();
-    });
-
-    // Reiniciar o jogo
-    restartButton.addEventListener('click', () => {
-        resultScreen.style.display = 'none';
-        gameScreen.style.display = 'block';
-        resetGame();
-        setupGame();
-    });
-
-    // Voltar para seleção de anos
-    backToYearsButton.addEventListener('click', () => {
-        resultScreen.style.display = 'none';
-        yearSelection.style.display = 'block';
-    });
-
-    backButton.addEventListener('click', () => {
-        gameScreen.style.display = 'none';
-        yearSelection.style.display = 'block';
-    });
-
-    // Função para iniciar o cronômetro
-    function startTimer() {
-        startTime = Date.now() - elapsedTime;
-        timerInterval = setInterval(updateTimer, 1000);
-    }
-
-    // Função para atualizar o cronômetro
-    function updateTimer() {
-        elapsedTime = Date.now() - startTime;
-        const seconds = Math.floor((elapsedTime / 1000) % 60);
-        const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
-        document.getElementById('timer').textContent = `Tempo: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    // Função para parar o cronômetro
-    function stopTimer() {
-        clearInterval(timerInterval);
-    }
-
-    // Função para resetar o cronômetro
-    function resetTimer() {
-        stopTimer();
-        elapsedTime = 0;
-        document.getElementById('timer').textContent = 'Tempo: 00:00';
-    }
-
-    function resetGame() {
-        lives = 3;
-        correctPairs = 0;
-        updateLivesDisplay();
-    }
-
-    function updateLivesDisplay() {
-        const lifeElements = document.querySelectorAll('.life');
-        lifeElements.forEach((life, index) => {
-            life.classList.toggle('lost', index >= lives);
-        });
-    }
-
-    function loseLife() {
-        lives--;
-        updateLivesDisplay();
-        
-        if (lives <= 0) {
-            endGame(false);
         }
-    }
 
-    function endGame(success) {
-        stopTimer();
-    
-        gameScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
-        
-        if (success) {
-            // Calcular o tempo decorrido formatado
-            const seconds = Math.floor((elapsedTime / 1000) % 60);
-            const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
-            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+       function startGame() {
+            limparTimer();
+            gameActive = true;
+            errorCount = 0; // Resetar contador de erros
             
-            // Mensagem com o ano e tempo
-            resultMessage.textContent = `Parabéns! Você completou a tarefa do ${currentYear}º ano em ${timeString}!`;
-        } else {
-            resultMessage.textContent = "Tente novamente! Você errou 3 vezes.";
+            elements.welcomeScreen.classList.add('hidden');
+            elements.resultScreen.classList.add('hidden');
+            elements.gameScreen.classList.remove('hidden');
+            if (elements.restartBtn) elements.restartBtn.classList.remove('hidden');
+            
+            const config = levelConfigs[currentLevel];
+            totalQuestions = config.totalCards;
+            timeLimit = config.timeLimit;
+            
+            score = 0;
+            remainingEquations = totalQuestions;
+            elements.scoreElement.textContent = `${score}/${totalQuestions}`;
+            elements.deck.querySelector('div').textContent = remainingEquations;
+            remainingTime = timeLimit;
+            updateTimeDisplay();
+            elements.timerProgress.style.width = '100%';
+            elements.timerProgress.style.backgroundColor = '#20c997';
+            
+            updateLevelInfo();
+            generateEquation();
+            startTimer();
         }
-    }
 
-    // Configurar o jogo
-    function setupGame() {
-        dragContainer.innerHTML = '';
-        dropContainer.innerHTML = '';
-        selectedItem = null;
-        dropSlots = [];
-
-        // Criar lista com todos os itens
-        let allItems = [];
-        currentPairs.forEach(pair => {
-            allItems.push(
-                { id: pair.id * 2, content: pair.itemA, type: pair.typeA, pairId: pair.id, theme: pair.theme },
-                { id: pair.id * 2 + 1, content: pair.itemB, type: pair.typeB, pairId: pair.id, theme: pair.theme }
-            );
-        });
-
-        // Embaralhar
-        allItems = shuffleArray(allItems);
-
-        // Adicionar itens arrastáveis
-        allItems.forEach(item => {
-            const dragItem = document.createElement('div');
-            dragItem.className = 'drag-item';
-            dragItem.dataset.id = item.id;
-            dragItem.dataset.pairId = item.pairId;
-            
-            // Aplicar cor de tema se estiver no modo fácil
-            if (currentDifficulty === "easy" && item.theme !== undefined) {
-                const themeClass = `theme-color-${item.theme % 6}`; // Usamos módulo 6 para garantir que temos uma classe válida
-                dragItem.classList.add(themeClass);
+        function reiniciarJogo() {
+            if (confirm('Reiniciar o jogo? Seu progresso será perdido.')) {
+                limparTimer();
+                gameActive = false;
+                startGame();
             }
+        }
 
-            if (item.type === "image") {
-                const img = document.createElement('img');
-                img.src = item.content;
-                dragItem.appendChild(img);
+        function limparTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimeDisplay() {
+            elements.timeElement.textContent = `${remainingTime.toFixed(1)}s`;
+        }
+
+        function nextLevel() {
+            currentLevel = currentLevel < 10 ? currentLevel + 1 : 1;
+            startGame();
+        }
+
+        function updateLevelInfo() {
+            const config = levelConfigs[currentLevel];
+            
+            elements.levelDisplay.textContent = currentLevel;
+            elements.levelDescription.textContent = `Nível ${currentLevel}: ${config.description}`;
+        }
+
+        function startTimer() {
+            limparTimer();
+            
+            timerInterval = setInterval(() => {
+                if (!gameActive) {
+                    limparTimer();
+                    return;
+                }
+                
+                remainingTime = Math.max(0, remainingTime - 0.1);
+                remainingTime = Math.round(remainingTime * 10) / 10;
+                
+                updateTimeDisplay();
+                
+                const percentage = (remainingTime / timeLimit) * 100;
+                atualizarTimerVisual(percentage);
+                
+                if (remainingTime <= 0.1) {
+                    limparTimer();
+                    endGame();
+                }
+            }, 100);
+        }
+
+        function atualizarTimerVisual(percentage) {
+            elements.timerProgress.style.width = `${percentage}%`;
+            
+            if (percentage <= 25) {
+                elements.timerProgress.style.backgroundColor = '#dc3545';
+            } else if (percentage <= 50) {
+                elements.timerProgress.style.backgroundColor = '#ffc107';
             } else {
-                dragItem.textContent = item.content;
+                elements.timerProgress.style.backgroundColor = '#20c997';
             }
-
-            dragItem.addEventListener('click', () => selectItem(dragItem));
-            dragContainer.appendChild(dragItem);
-        });
-
-        // Criar slots (metade do número de pares)
-        for (let i = 0; i < 4; i++) {
-            const dominoPair = document.createElement('div');
-            dominoPair.className = 'domino-pair';
-
-            const dropSlot1 = document.createElement('div');
-            dropSlot1.className = 'drop-slot';
-            dropSlot1.dataset.pairIndex = i;
-
-            const dropSlot2 = document.createElement('div');
-            dropSlot2.className = 'drop-slot';
-            dropSlot2.dataset.pairIndex = i;
-
-            [dropSlot1, dropSlot2].forEach(slot => {
-                slot.addEventListener('click', () => tryPlaceItem(slot));
-                dropSlots.push(slot);
-            });
-
-            dominoPair.appendChild(dropSlot1);
-            dominoPair.appendChild(dropSlot2);
-            dropContainer.appendChild(dominoPair);
         }
-        
-        resetTimer();
-        startTimer();
-    }
-    
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
 
-    function selectItem(item) {
-        // Desselecionar item anterior
-        document.querySelectorAll('.drag-item.selected').forEach(el => {
-            el.classList.remove('selected');
-        });
-        
-        // Selecionar novo item
-        selectedItem = item;
-        item.classList.add('selected');
-        
-        // Mostrar slots disponíveis
-        dropSlots.forEach(slot => {
-            if (!slot.hasChildNodes()) {
-                slot.classList.add('highlight');
+        function generateEquation() {
+            let equation = "";
+            let solution = 0;
+            
+            // Gerar equações baseadas no nível atual
+            switch(currentLevel) {
+                case 1:
+                    // Mistura do antigo nível 1 e 2: x + a = b e x - a = b
+                    if (Math.random() > 0.5) {
+                        // x + a = b
+                        let a1 = Math.floor(Math.random() * 15) + 1;
+                        let b1 = Math.floor(Math.random() * 15) - 5;
+                        equation = `x + ${a1} = ${b1}`;
+                        solution = b1 - a1;
+                    } else {
+                        // x - a = b
+                        let a2 = Math.floor(Math.random() * 15) + 1;
+                        let b2 = Math.floor(Math.random() * 15) - 5;
+                        equation = `x - ${a2} = ${b2}`;
+                        solution = b2 + a2;
+                    }
+                    break;
+                    
+                case 2:
+                    // Antigo nível 3: a*x = b
+                    let a3 = Math.floor(Math.random() * 8) + 2;
+                    let b3 = a3 * (Math.floor(Math.random() * 10) - 3);
+                    equation = `${a3}x = ${b3}`;
+                    solution = b3 / a3;
+                    break;
+                    
+                case 3:
+                    // Mistura do antigo nível 4 e 5
+                    if (Math.random() > 0.5) {
+                        // a*x + b = c
+                        let a4 = Math.floor(Math.random() * 5) + 2;
+                        let b4 = Math.floor(Math.random() * 10) + 1;
+                        let c4 = a4 * (Math.floor(Math.random() * 10) - 3) + b4;
+                        equation = `${a4}x + ${b4} = ${c4}`;
+                        solution = (c4 - b4) / a4;
+                    } else {
+                        // a*x - b = c
+                        let a5 = Math.floor(Math.random() * 5) + 2;
+                        let b5 = Math.floor(Math.random() * 10) + 1;
+                        let c5 = a5 * (Math.floor(Math.random() * 10) - 3) - b5;
+                        equation = `${a5}x - ${b5} = ${c5}`;
+                        solution = (c5 + b5) / a5;
+                    }
+                    break;
+                    
+                case 4:
+                    // Mistura do antigo nível 6, 7 e 8
+                    const type4 = Math.floor(Math.random() * 3);
+                    if (type4 === 0) {
+                        // a = x + b
+                        let a6 = Math.floor(Math.random() * 15) - 2;
+                        let b6 = Math.floor(Math.random() * 10) + 1;
+                        equation = `${a6} = x + ${b6}`;
+                        solution = a6 - b6;
+                    } else if (type4 === 1) {
+                        // -a*x = b
+                        let a7 = Math.floor(Math.random() * 5) + 2;
+                        let b7 = a7 * (Math.floor(Math.random() * 10) - 3);
+                        equation = `-${a7}x = ${b7}`;
+                        solution = -b7 / a7;
+                    } else {
+                        // a = b*x - c
+                        let a8 = Math.floor(Math.random() * 20) - 5;
+                        let b8 = Math.floor(Math.random() * 4) + 2;
+                        let c8 = Math.floor(Math.random() * 8) + 1;
+                        equation = `${a8} = ${b8}x - ${c8}`;
+                        solution = (a8 + c8) / b8;
+                    }
+                    break;
+                    
+                case 5:
+                    // Mistura do antigo nível 9 e 10
+                    if (Math.random() > 0.5) {
+                        // (1/a)*x = b
+                        let a9 = Math.floor(Math.random() * 4) + 2;
+                        let b9 = Math.floor(Math.random() * 10) - 3;
+                        equation = `(1/${a9})x = ${b9}`;
+                        solution = b9 * a9;
+                    } else {
+                        // 0.a*x = b
+                        let a10 = (Math.floor(Math.random() * 9) + 1) / 10;
+                        let b10 = Math.floor(Math.random() * 8) - 2;
+                        equation = `${a10.toFixed(1)}x = ${b10}`;
+                        solution = Math.round((b10 / a10) * 10) / 10;
+                    }
+                    break;
+                    
+                case 6:
+                    // Mistura do antigo nível 11 e 12
+                    if (Math.random() > 0.5) {
+                        // a*x + b = c*x + d
+                        let a11 = Math.floor(Math.random() * 5) + 2;
+                        let b11 = Math.floor(Math.random() * 5) + 1;
+                        let c11 = Math.floor(Math.random() * 4) + 1;
+                        let d11 = Math.floor(Math.random() * 5) + 1;
+                        equation = `${a11}x + ${b11} = ${c11}x + ${d11}`;
+                        solution = (d11 - b11) / (a11 - c11);
+                    } else {
+                        // a*x - b = -c*x + d
+                        let a12 = Math.floor(Math.random() * 5) + 2;
+                        let b12 = Math.floor(Math.random() * 5) + 1;
+                        let c12 = Math.floor(Math.random() * 4) + 1;
+                        let d12 = Math.floor(Math.random() * 5) + 1;
+                        equation = `${a12}x - ${b12} = -${c12}x + ${d12}`;
+                        solution = (d12 + b12) / (a12 + c12);
+                    }
+                    break;
+                    
+                case 7:
+                    // Mistura do antigo nível 13 e 14
+                    if (Math.random() > 0.5) {
+                        // a*(x + b) = c
+                        let a13 = Math.floor(Math.random() * 5) + 2;
+                        let b13 = Math.floor(Math.random() * 5) + 1;
+                        let c13 = a13 * (Math.floor(Math.random() * 5) + b13 + 1);
+                        equation = `${a13}(x + ${b13}) = ${c13}`;
+                        solution = (c13 / a13) - b13;
+                    } else {
+                        // a*(x - b) = c*(x + d)
+                        let a14 = Math.floor(Math.random() * 4) + 2;
+                        let b14 = Math.floor(Math.random() * 3) + 1;
+                        let c14 = Math.floor(Math.random() * 3) + 1;
+                        let d14 = Math.floor(Math.random() * 3) + 1;
+                        equation = `${a14}(x - ${b14}) = ${c14}(x + ${d14})`;
+                        solution = (a14 * b14 + c14 * d14) / (a14 - c14);
+                    }
+                    break;
+                    
+                case 8:
+                    // Mistura do antigo nível 15, 16 e 17
+                    const type8 = Math.floor(Math.random() * 3);
+                    if (type8 === 0) {
+                        // x/a + x/b = c
+                        let a15 = Math.floor(Math.random() * 4) + 2;
+                        let b15 = Math.floor(Math.random() * 4) + 2;
+                        let c15 = Math.floor(Math.random() * 5) + 1;
+                        equation = `x/${a15} + x/${b15} = ${c15}`;
+                        solution = (c15 * a15 * b15) / (b15 + a15);
+                    } else if (type8 === 1) {
+                        // 0.a*x + 0.b = c
+                        let a16 = (Math.floor(Math.random() * 9) + 1) / 10;
+                        let b16 = (Math.floor(Math.random() * 9) + 1) / 10;
+                        let c16 = Math.floor(Math.random() * 3) + 1;
+                        equation = `${a16.toFixed(1)}x + ${b16.toFixed(1)} = ${c16}`;
+                        solution = Math.round(((c16 - b16) / a16) * 10) / 10;
+                    } else {
+                        // (a*x)/b + c = x - d
+                        let a17 = Math.floor(Math.random() * 4) + 2;
+                        let b17 = Math.floor(Math.random() * 4) + 2;
+                        let c17 = Math.floor(Math.random() * 3) + 1;
+                        let d17 = Math.floor(Math.random() * 3) + 1;
+                        equation = `(${a17}x)/${b17} + ${c17} = x - ${d17}`;
+                        solution = (b17 * (c17 + d17)) / (b17 - a17);
+                    }
+                    break;
+                    
+                case 9:
+                    // Mistura do antigo nível 18, 19 e 20
+                    const type9 = Math.floor(Math.random() * 3);
+                    if (type9 === 0) {
+                        // a*(b*x - c) + d*(x + e) = f
+                        let a18 = Math.floor(Math.random() * 3) + 2;
+                        let b18 = Math.floor(Math.random() * 3) + 1;
+                        let c18 = Math.floor(Math.random() * 3) + 1;
+                        let d18 = Math.floor(Math.random() * 3) + 1;
+                        let e18 = Math.floor(Math.random() * 3) + 1;
+                        let f18 = a18 * (b18 * (Math.floor(Math.random() * 3) + 2) - c18) + d18 * ((Math.floor(Math.random() * 3) + 2) + e18);
+                        equation = `${a18}(${b18}x - ${c18}) + ${d18}(x + ${e18}) = ${f18}`;
+                        solution = (f18 + a18 * c18 - d18 * e18) / (a18 * b18 + d18);
+                    } else if (type9 === 1) {
+                        // (a*(x - b))/c = (x + d)/e
+                        let a19 = Math.floor(Math.random() * 3) + 2;
+                        let b19 = Math.floor(Math.random() * 3) + 1;
+                        let c19 = Math.floor(Math.random() * 3) + 2;
+                        let d19 = Math.floor(Math.random() * 3) + 1;
+                        let e19 = Math.floor(Math.random() * 3) + 2;
+                        equation = `(${a19}(x - ${b19}))/${c19} = (x + ${d19})/${e19}`;
+                        solution = (a19 * b19 * e19 + c19 * d19) / (a19 * e19 - c19);
+                    } else {
+                        // 0.a*(b*x - c) + (1/d)*(x + e) = f*x - g
+                        let a20 = (Math.floor(Math.random() * 5) + 1) / 10;
+                        let b20 = Math.floor(Math.random() * 3) + 2;
+                        let c20 = Math.floor(Math.random() * 3) + 1;
+                        let d20 = Math.floor(Math.random() * 3) + 2;
+                        let e20 = Math.floor(Math.random() * 3) + 1;
+                        let f20 = Math.floor(Math.random() * 2) + 1;
+                        let g20 = Math.floor(Math.random() * 3) + 1;
+                        equation = `${a20.toFixed(1)}(${b20}x - ${c20}) + (1/${d20})(x + ${e20}) = ${f20}x - ${g20}`;
+                        solution = (a20 * c20 - e20/d20 - g20) / (a20 * b20 + 1/d20 - f20);
+                    }
+                    break;
+                    
+                case 10:
+                    // Desafio final - Todas as complexidades
+                    const type10 = Math.floor(Math.random() * 4);
+                    // Equações complexas de todos os tipos anteriores
+                    // (implementação similar aos casos anteriores, mas mais desafiadoras)
+                    let baseA = Math.floor(Math.random() * 5) + 2;
+                    let baseB = Math.floor(Math.random() * 10) - 2;
+                    equation = `${baseA}x + ${baseB} = ${baseA * 2 + baseB}`;
+                    solution = 2;
+                    break;
             }
-        });
-    }
+            
+            currentEquation = equation;
+            correctAnswer = solution;
+            
+            elements.equationDisplay.textContent = equation;
+            generateOptions();
+        }
 
-    function tryPlaceItem(slot) {
-        if (!selectedItem || slot.hasChildNodes()) return;
 
-        // Remover highlight
-        dropSlots.forEach(s => s.classList.remove('highlight'));
-
-        // Criar cópia do item
-        const clonedItem = selectedItem.cloneNode(true);
-        clonedItem.classList.remove('selected');
-        clonedItem.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dragContainer.appendChild(clonedItem);
-            clonedItem.addEventListener('click', () => selectItem(clonedItem));
-        });
-
-        // Colocar no slot
-        slot.appendChild(clonedItem);
-        
-        // Remover original
-        selectedItem.remove();
-        selectedItem = null;
-
-        // Verificar se completou um par
-        checkPairs();
-    }
-
-    function checkPairs() {
-        // Verificar todos os pares de slots
-        for (let i = 0; i < dropSlots.length; i += 2) {
-            const slot1 = dropSlots[i];
-            const slot2 = dropSlots[i + 1];
-
-            // Se ambos slots estão preenchidos
-            if (slot1.firstChild && slot2.firstChild) {
-                const item1 = slot1.firstChild;
-                const item2 = slot2.firstChild;
-
-                // Verificar se é um par correto
-                if (item1.dataset.pairId === item2.dataset.pairId) {
-                    // Par correto - remover após 0.5s
-                    setTimeout(() => {
-                        slot1.removeChild(item1);
-                        slot2.removeChild(item2);
-                        correctPairs++;
-                        
-                        // Verificar vitória
-                        if (correctPairs >= currentPairs.length) {
-                            endGame(true);
+        function generateOptions() {
+            elements.optionsContainer.innerHTML = '';
+            
+            let options = [correctAnswer];
+            
+            // Verificar se a resposta é um número inteiro
+            const isInteger = Number.isInteger(correctAnswer);
+            
+            // Definir o range baseado no nível e se é inteiro
+            let range;
+            if (isInteger) {
+                // Para números inteiros, usar range baseado no valor absoluto
+                range = Math.max(2, Math.floor(Math.abs(correctAnswer) * 0.4) + 3);
+            } else {
+                // Para números decimais, usar range menor
+                range = Math.max(1, Math.abs(correctAnswer) * 0.3);
+            }
+            
+            // Ajustar range para níveis mais altos (respostas podem ser maiores)
+            if (currentLevel >= 15) {
+                range *= 1.5;
+            } else if (currentLevel >= 10) {
+                range *= 1.2;
+            }
+            
+            while (options.length < 6) {
+                let option;
+                let attempts = 0;
+                
+                do {
+                    // Gerar variação que pode ser positiva ou negativa
+                    const variation = (Math.random() * (range * 2) - range);
+                    
+                    if (isInteger) {
+                        // Para respostas inteiras, gerar apenas opções inteiras
+                        option = correctAnswer + Math.round(variation);
+                        // Garantir que não seja zero quando a resposta não é zero
+                        if (option === 0 && correctAnswer !== 0) {
+                            option = correctAnswer + (Math.random() > 0.5 ? 1 : -1);
                         }
-                    }, 500);
-                } else {
-                    // Par errado - perder vida após 1s
-                    setTimeout(() => {
-                        dragContainer.appendChild(item1);
-                        dragContainer.appendChild(item2);
-                        item1.addEventListener('click', () => selectItem(item1));
-                        item2.addEventListener('click', () => selectItem(item2));
-                        loseLife();
-                    }, 1000);
+                    } else {
+                        // Para respostas decimais, manter uma casa decimal
+                        option = correctAnswer + variation;
+                        option = Math.round(option * 10) / 10;
+                    }
+                    
+                    attempts++;
+                    
+                    if (attempts > 30) {
+                        // Se não conseguir gerar opções únicas, criar manualmente
+                        if (isInteger) {
+                            option = correctAnswer + (options.length * 2 - 5);
+                        } else {
+                            option = correctAnswer + (options.length * 0.5 - 1.5);
+                            option = Math.round(option * 10) / 10;
+                        }
+                        break;
+                    }
+                } while (options.includes(option) || option === correctAnswer);
+                
+                if (option !== correctAnswer && !options.includes(option)) {
+                    options.push(option);
                 }
             }
+            
+            shuffleArray(options).forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                elements.optionsContainer.appendChild(button);
+            });
         }
-    }
-</script>
+            
+
+      function checkAnswer(answer) {
+            if (!gameActive) return;
+            
+            desabilitarOpcoes(elements.optionsContainer);
+            
+            // Verificar se a resposta está correta (com margem de erro para números decimais)
+            const isCorrect = Math.abs(answer - correctAnswer) < 0.01;
+            
+            if (isCorrect) {
+                score++;
+                remainingEquations--;
+                elements.scoreElement.textContent = `${score}/${totalQuestions}`;
+                
+                // ACRÉSCIMO DE TEMPO: 3s para todos os níveis
+                remainingTime += 3;
+                
+                // Resetar contador de erros quando acerta
+                errorCount = 0;
+            } else {
+                // PENALIDADE ESCALONADA: primeiro erro 2s, multiplica por 2 a cada erro
+                const penalty = 2 * Math.pow(2, errorCount);
+                remainingTime = Math.max(0.1, remainingTime - penalty);
+                errorCount++; // Incrementar contador de erros
+            }
+            
+            elements.deck.querySelector('div').textContent = remainingEquations;
+            
+            // Arredondar tempo
+            remainingTime = Math.round(remainingTime * 10) / 10;
+            
+            updateTimeDisplay();
+            atualizarTimerVisual((remainingTime / timeLimit) * 100);
+            
+            // Verificar condições de término
+            if (score >= totalQuestions) {
+                setTimeout(() => {
+                    limparTimer();
+                    endGame();
+                }, 800);
+                return;
+            }
+            
+            if (remainingEquations <= 0) {
+                setTimeout(() => {
+                    limparTimer();
+                    endGame();
+                }, 800);
+                return;
+            }
+            
+            if (remainingTime <= 0.1) {
+                setTimeout(() => {
+                    limparTimer();
+                    endGame();
+                }, 800);
+                return;
+            }
+            
+            // Continuar o jogo
+            setTimeout(() => {
+                if (gameActive) {
+                    generateEquation();
+                }
+            }, 800);
+        }
+
+        function desabilitarOpcoes(container) {
+            container.querySelectorAll('.option').forEach(button => {
+                button.disabled = true;
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+            });
+        }
+
+        function endGame() {
+            gameActive = false;
+            limparTimer();
+            
+            elements.gameScreen.classList.add('hidden');
+            elements.resultScreen.classList.remove('hidden');
+            if (elements.restartBtn) elements.restartBtn.classList.add('hidden');
+            
+            const venceu = score >= totalQuestions;
+            const tempoEsgotado = remainingTime <= 0.1;
+            
+            if (venceu) {
+                elements.resultMessage.textContent = 'Parabéns!';
+                elements.resultMessage.classList.remove('lose');
+                elements.resultStats.textContent = `Você acertou ${score} de ${totalQuestions} equações!`;
+            } else if (tempoEsgotado) {
+                elements.resultMessage.textContent = 'Tempo esgotado!';
+                elements.resultMessage.classList.add('lose');
+                elements.resultStats.textContent = `Você acertou ${score} de ${totalQuestions} equações.`;
+            } else {
+                elements.resultMessage.textContent = 'Fim do jogo!';
+                elements.resultMessage.classList.add('lose');
+                elements.resultStats.textContent = `Você acertou ${score} de ${totalQuestions} equações.`;
+            }
+            
+            if (elements.nextLevelBtn) {
+                elements.nextLevelBtn.style.display = venceu && currentLevel < 20 ? 'block' : 'none';
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Inicializar o jogo quando a página carregar
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
